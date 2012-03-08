@@ -20,6 +20,7 @@ all: \
 d3.data_grid.js: \
 	src/start.js\
 	build/root.js \
+	src/url_params.js \
 	src/picnet/search.js \
 	build/data_grid.js \
 	src/end.js
