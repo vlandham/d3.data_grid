@@ -1,0 +1,7 @@
+h2. d3.tsv
+
+Quick hack to get tab-separated-value (TSV) parsing in "d3.js":https://github.com/mbostock/d3
+
+Use just like "d3.csv":https://github.com/mbostock/d3/wiki/CSV
+
+d3.tsv("input.tsv", process_data);
