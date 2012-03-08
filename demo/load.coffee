@@ -1,7 +1,7 @@
-# root = exports ? this
+root ?= exports ? this
 
 $ ->
-  data_grid = new data_grid.DataGrid
+  data_grid = new root.data_grid.DataGrid
   options = data_grid.get_options()
 
   data_loaded = (data) ->
