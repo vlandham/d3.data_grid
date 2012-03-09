@@ -1,0 +1,176 @@
+a, a:visited, a:active {
+  color: #436DB3;
+}
+
+a:hover { color: #588EEA; }
+
+li {
+  color: #404040;
+}
+
+h2 {
+  margin-bottom: 17px;
+  border-bottom: 1px solid #ddd;
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+header {
+  height: 35px;
+  width: 100%;
+  display:block;
+  background-color: #222;
+  color: white;
+}
+
+.brand {
+  float: right;
+  display: block;
+  padding: 8px 20px 0;
+  color: white;
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 1;
+}
+
+a.brand:hover, a.brand:visited { 
+  color: white;
+  text-decoration: none;
+}
+
+span.header_accent {
+  font-size: 12px;
+}
+
+span.header_accent a {
+  color: #5d5d5d;
+}
+
+#toc {
+	float: right;
+	font-size: 10pt;
+	width: 200px;
+	padding: 10px 10px 10px 20px;
+	background: #FDF5D9;
+	border: solid 1px #FCEEC1;
+	margin: 5px 0 10px 0;
+}
+
+#toc a {
+  color: #5d5d5d;
+}
+
+#about {
+  float:left;
+  width: 500px;
+  padding:0;
+  margin:0;
+}
+
+#about ul {
+  list-style: none;
+}
+
+.note {
+  background-color: #D1EED1;
+  padding: 10px;
+  border: 2px solid #BFE7BF;
+  margin-bottom: 1.5em;
+}
+
+.center {
+  text-align: center;
+  margin: auto;
+}
+
+img {
+  display:block;
+  margin: auto;
+}
+
+img.thumb {
+  width: 150px;
+}
+
+img.small {
+  width: 300px;
+}
+
+img.medium {
+  width: 600px;
+}
+
+img.large {
+  width: 900px;
+}
+
+table thead td, table thead th {
+  text-align: center;
+}
+
+table td {
+  text-align: right;
+}
+
+table.display td {
+  border-right: 1px solid #DDD;
+}
+
+table.simple {
+  width: auto;
+  margin: auto;
+}
+
+table.simple th, table.simple td {
+  text-align:center;
+  border-left: none;
+  border-right:none;
+}
+
+table.grid {
+  width: auto;
+  margin: auto;
+  border: 1px solid #ddd;
+}
+
+table.grid th, table.grid td {
+  padding:0 5px 0 5px;
+  border-right: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+}
+
+table.image-grid td {
+  border:none;
+}
+
+.dataTables_info {
+width: 100%;
+padding-bottom: 10px;
+}
+
+
+blockquote {
+  color: #777;
+}
+
+code {
+  background-color: #f5f5f5;
+}
+
+footer p {
+  text-align: center;
+}
+
+.collapsed { display: none; }
+
+a.copy {
+  margin-top: 5px;
+  float: right;
+  clear:right;
+}
+
+#quickfind {
+  margin-top: 5px;
+}
+
