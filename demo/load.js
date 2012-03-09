@@ -1,13 +1,30 @@
 (function() {
+  var init_options;
 
   if (typeof root === "undefined" || root === null) {
     root = typeof exports !== "undefined" && exports !== null ? exports : this;
   }
 
+  init_options = function() {
+    var options;
+    options = {};
+    options.filename = getURLParameter('file') || null;
+    options.page = parseInt(getURLParameter('page')) || 1;
+    options.limit = parseInt(getURLParameter('limit')) || 100;
+    options.sort = getURLParameter('sort') || null;
+    options.page_top = getURLParameter('page_top') === 'true';
+    options.page_bottom = !(getURLParameter('page_bottom') === 'false');
+    options.timer_interval = getURLParameter('timer_interval') || 800;
+    options.chart_display = !(getURLParameter('chart_display') === 'false');
+    return options;
+  };
+
   $(function() {
     var data_grid, data_loaded, error_bad_extension, error_bad_load, error_no_file, ext, options;
-    data_grid = new root.data_grid.DataGrid;
-    options = data_grid.get_options();
+    options = init_options();
+    options.filename = "demo/data/movies_2011.csv";
+    console.log(options);
+    data_grid = new root.data_grid.DataGrid(options);
     data_loaded = function(data) {
       console.log("loaded");
       if (data) {

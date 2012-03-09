@@ -1,8 +1,23 @@
 root ?= exports ? this
 
+init_options =  () ->
+  options = {}
+  options.filename = getURLParameter('file') || null
+  options.page = parseInt(getURLParameter('page')) || 1
+  options.limit = parseInt(getURLParameter('limit')) || 100
+  options.sort = getURLParameter('sort') || null
+  options.page_top = getURLParameter('page_top') == 'true'
+  options.page_bottom = !(getURLParameter('page_bottom') == 'false')
+  options.timer_interval = getURLParameter('timer_interval') || 800
+  options.chart_display = !(getURLParameter('chart_display') == 'false')
+  options
+
 $ ->
-  data_grid = new root.data_grid.DataGrid
-  options = data_grid.get_options()
+  options = init_options()
+  options.filename = "demo/data/movies_2011.csv"
+  console.log(options)
+
+  data_grid = new root.data_grid.DataGrid(options)
 
   data_loaded = (data) ->
     console.log("loaded")
