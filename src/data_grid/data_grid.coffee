@@ -1,28 +1,21 @@
 
 class DataGrid
-  constructor: () ->
+  constructor: (options = {}) ->
     @filters = []
     @search  = new picnet.ui.filter.SearchEngine()
     @timer = null
     @column_displays = {}
+    @options = this.set_options(options)
 
-  init_options: () =>
-    options = {}
-    options.filename = getURLParameter('file') || null
-    options.page = parseInt(getURLParameter('page')) || 1
-    options.limit = parseInt(getURLParameter('limit')) || 100
-    options.sort = getURLParameter('sort') || null
-    options.page_top = getURLParameter('page_top') == 'true'
-    options.page_bottom = !(getURLParameter('page_bottom') == 'false')
-    options.timer_interval = getURLParameter('timer_interval') || 800
-    options.chart_display = !(getURLParameter('chart_display') == 'false')
-    
-    options
-
-  get_options: () =>
-    if !@options
-      @options = this.init_options()
-    @options
+  set_options: (options) ->
+    options.filename ?= null
+    options.page ?= 1
+    options.limit ?= 100
+    options.sort ?= null
+    options.page_top ?= false
+    options.page_bottom ?= true
+    options.time_interval ?= 800
+    options.chart_display ?= true
 
   # TODO: lots of column display stuff in our data_grid
   # move out to separate class?
@@ -66,7 +59,7 @@ class DataGrid
     grid_header = grid.append("thead")
     grid_titles = grid_header.append("tr")
     grid_views = null
-    if this.get_options().chart_display
+    if @options.chart_display
       grid_views = grid_header.append("tr").attr("class", "grid_views")
 
     grid_filters = grid_header.append("tr").attr("class", "filters")
@@ -218,7 +211,7 @@ class DataGrid
     @original_data = data
     d3.select("##{id}").html("<div id=\"data_grid_pagination_top\"></div><div id=\"data_grid_data\"></div><div id=\"data_grid_pagination_bottom\"></div>")
 
-    options = this.get_options()
+    options = @options
 
     this.create_view("#data_grid_data", data, options)
     this.refresh()
@@ -226,7 +219,7 @@ class DataGrid
   # Refreshes the display of the data given the current
   # options and filters set
   refresh: () =>
-    options = this.get_options()
+    options = @options
     data = @original_data
     @filtered_data = this.filter(data,options)
     this.sort(@filtered_data,options)
@@ -240,7 +233,7 @@ class DataGrid
   start_refresh_timer: () =>
     if @timer
       clearTimeout(@timer)
-    @timer = setTimeout(this.end_refresh_timer, this.get_options().timer_interval)
+    @timer = setTimeout(this.end_refresh_timer, @options.timer_interval)
 
   end_refresh_timer: () =>
     @timer = null
