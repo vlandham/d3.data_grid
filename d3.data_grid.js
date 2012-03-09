@@ -5,34 +5,6 @@ root = typeof exports !== "undefined" && exports !== null ? exports : this;
 data_grid = root.data_grid = {};
 
 data_grid.version = "0.1.0";
-function getURLParameter(name) {
-    return decodeURIComponent((RegExp('[?|&]' + name + '=' + '(.+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
-}
-
-function insertParam(key, value)
-{
-    key = escape(key); value = escape(value);
-
-    var kvp = document.location.search.substr(1).split('&');
-
-    var i=kvp.length; var x; while(i--) 
-    {
-        x = kvp[i].split('=');
-
-        if (x[0]==key)
-        {
-                x[1] = value;
-                kvp[i] = x.join('=');
-                break;
-        }
-    }
-
-    if(i<0) {kvp[kvp.length] = [key,value].join('=');}
-
-    //this will reload the page, it's likely better to store this until finished
-    document.location.search = kvp.join('&'); 
-}
-
 
 var picnet = {};
 picnet.ui = {};
@@ -329,7 +301,8 @@ var DataGrid,
 
 DataGrid = (function() {
 
-  function DataGrid() {
+  function DataGrid(options) {
+    if (options == null) options = {};
     this.end_refresh_timer = __bind(this.end_refresh_timer, this);
     this.start_refresh_timer = __bind(this.start_refresh_timer, this);
     this.refresh = __bind(this.refresh, this);
@@ -348,30 +321,23 @@ DataGrid = (function() {
     this.column_display_icon = __bind(this.column_display_icon, this);
     this.set_column_display = __bind(this.set_column_display, this);
     this.column_display = __bind(this.column_display, this);
-    this.get_options = __bind(this.get_options, this);
-    this.init_options = __bind(this.init_options, this);    this.filters = [];
+    this.filters = [];
     this.search = new picnet.ui.filter.SearchEngine();
     this.timer = null;
     this.column_displays = {};
+    this.options = this.set_options(options);
   }
 
-  DataGrid.prototype.init_options = function() {
-    var options;
-    options = {};
-    options.filename = getURLParameter('file') || null;
-    options.page = parseInt(getURLParameter('page')) || 1;
-    options.limit = parseInt(getURLParameter('limit')) || 100;
-    options.sort = getURLParameter('sort') || null;
-    options.page_top = getURLParameter('page_top') === 'true';
-    options.page_bottom = !(getURLParameter('page_bottom') === 'false');
-    options.timer_interval = getURLParameter('timer_interval') || 800;
-    options.chart_display = !(getURLParameter('chart_display') === 'false');
-    return options;
-  };
-
-  DataGrid.prototype.get_options = function() {
-    if (!this.options) this.options = this.init_options();
-    return this.options;
+  DataGrid.prototype.set_options = function(options) {
+    var _ref;
+    if (options.filename == null) options.filename = null;
+    if (options.page == null) options.page = 1;
+    if (options.limit == null) options.limit = 100;
+    if (options.sort == null) options.sort = null;
+    if (options.page_top == null) options.page_top = false;
+    if (options.page_bottom == null) options.page_bottom = true;
+    if (options.time_interval == null) options.time_interval = 800;
+    return (_ref = options.chart_display) != null ? _ref : options.chart_display = true;
   };
 
   DataGrid.prototype.column_display = function(column_id) {
@@ -427,7 +393,7 @@ DataGrid = (function() {
     grid_header = grid.append("thead");
     grid_titles = grid_header.append("tr");
     grid_views = null;
-    if (this.get_options().chart_display) {
+    if (this.options.chart_display) {
       grid_views = grid_header.append("tr").attr("class", "grid_views");
     }
     grid_filters = grid_header.append("tr").attr("class", "filters");
@@ -580,14 +546,14 @@ DataGrid = (function() {
     var options;
     this.original_data = data;
     d3.select("#" + id).html("<div id=\"data_grid_pagination_top\"></div><div id=\"data_grid_data\"></div><div id=\"data_grid_pagination_bottom\"></div>");
-    options = this.get_options();
+    options = this.options;
     this.create_view("#data_grid_data", data, options);
     return this.refresh();
   };
 
   DataGrid.prototype.refresh = function() {
     var data, options, page_data;
-    options = this.get_options();
+    options = this.options;
     data = this.original_data;
     this.filtered_data = this.filter(data, options);
     this.sort(this.filtered_data, options);
@@ -603,7 +569,7 @@ DataGrid = (function() {
 
   DataGrid.prototype.start_refresh_timer = function() {
     if (this.timer) clearTimeout(this.timer);
-    return this.timer = setTimeout(this.end_refresh_timer, this.get_options().timer_interval);
+    return this.timer = setTimeout(this.end_refresh_timer, this.options.timer_interval);
   };
 
   DataGrid.prototype.end_refresh_timer = function() {
