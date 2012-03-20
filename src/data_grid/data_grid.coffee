@@ -29,11 +29,11 @@ class DataGrid
 
   # TODO: hardcoding image paths not portable. 
   # investigate css only approach
-  column_display_icon: (display_type) =>
-    if display_type == "num"
-      "/imgs/data_grid/eye.png"
-    else
-      "/imgs/data_grid/chart.png"
+  # column_display_icon: (display_type) =>
+  #   if display_type == "num"
+  #     "/imgs/data_grid/eye.png"
+  #   else
+  #     "/imgs/data_grid/chart.png"
 
   change_column_display: (column_id) =>
     current_display = this.column_display(column_id)

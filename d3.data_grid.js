@@ -319,7 +319,6 @@ DataGrid = (function() {
     this.refresh_view = __bind(this.refresh_view, this);
     this.create_view = __bind(this.create_view, this);
     this.change_column_display = __bind(this.change_column_display, this);
-    this.column_display_icon = __bind(this.column_display_icon, this);
     this.set_column_display = __bind(this.set_column_display, this);
     this.column_display = __bind(this.column_display, this);
     this.id = id;
@@ -348,14 +347,6 @@ DataGrid = (function() {
 
   DataGrid.prototype.set_column_display = function(column_id, display_type) {
     return this.column_displays[column_id] = display_type;
-  };
-
-  DataGrid.prototype.column_display_icon = function(display_type) {
-    if (display_type === "num") {
-      return "/imgs/data_grid/eye.png";
-    } else {
-      return "/imgs/data_grid/chart.png";
-    }
   };
 
   DataGrid.prototype.change_column_display = function(column_id) {
