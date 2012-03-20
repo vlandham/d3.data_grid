@@ -1,6 +1,6 @@
 h2. d3.data_grid
 
-Quickly browse and filter csv files from a web front-end
+Quickly browse and filter csv files from a web front-end. Built on D3.js
 
 h2. How?
 
@@ -26,5 +26,35 @@ In your data_loaded, call the @show@ method of your data_grid:
 data_grid.show(data);
 </pre>
 
+h2. Demo?
+
+If you have python installed, simply start up the built-in server:
+
+<pre>
+python -m SimpleHTTPServer 8888
+</pre>
+
+and navigate to "localhost:8888/demo":http://localhost:8888/demo
+
 h2. Why?
+
+*The Problem* : We wanted to provide a quick look at large sets of data and allow for filtering and quick understanding. Essentially, we wanted a super basic version of Excel that ran in the browser. 
+
+We wanted to be able to throw in a csv or tsv file and have it rendered nicely.
+
+We didn't want to have to specify what type of data each column contained.
+
+We wanted it to be fast.
+
+We didn't want any backend.
+
+*The Solution* : Existing javascript solutions I looked at either required a html table to work on, or required explicit information about the data being displayed. 
+
+@d3.data_grid@ is fast, as it uses pagination (currently very basic) instead of attempting to display the entire dataset at one time. However, filtering works on the entire dataset - so you are not limited by only seeing part of your data. 
+
+@d3.data_grid@ is built on d3.js - which allows for interesting and informative visualizations of your rows and columns (currently very basic).
+
+@d3.data_grid@ works with data parsed by d3. So it can work on csv or json files with no problems. Using "d3.tsv":https://github.com/vlandham/d3.tsv , you can also easily parse tsv files.
+
+@d3.data_grid@ uses the same filtering code as the "picnet table filter":http://www.picnet.com.au/picnet-table-filter.html , but doesn't rely on jquery, or closure. Picnet Table filter is a great solution for this kind of problem. I completely recommend using it if you want a mature and stable form of this kind of filtering that works on html tables, or uses a back-end. 
 
