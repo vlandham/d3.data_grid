@@ -1,2 +1,30 @@
 h2. d3.data_grid
 
+Quickly browse and filter csv files from a web front-end
+
+h2. How?
+
+Prereq: d3.js is included on your page.
+
+Include @d3.data_grid.js@ or @d3.data_grid.min.js@. 
+
+Create a new data_grid object, passing in the id of where it should be placed:
+
+<pre>
+var data_grid = new data_grid.DataGrid("data_grid", options);
+</pre>
+
+Use the d3.js functionality to load a csv, tsv, or json file:
+
+<pre>
+d3.csv(options.filename, data_loaded);
+</pre>
+
+In your data_loaded, call the @show@ method of your data_grid:
+
+<pre>
+data_grid.show(data);
+</pre>
+
+h2. Why?
+
