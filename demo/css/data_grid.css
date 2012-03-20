@@ -1,4 +1,17 @@
 
+table thead td, table thead th {
+  text-align: center;
+}
+
+table td {
+  text-align: right;
+}
+
+.data_grid_data_display {
+  padding: 5px;
+  margin: 5px;
+}
+
 .data_grid_page_links {
   padding-top: 10px;
 }

@@ -4,7 +4,7 @@ root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
 data_grid = root.data_grid = {};
 
-data_grid.version = "0.1.0";
+data_grid.version = "0.2.0";
 
 var picnet = {};
 picnet.ui = {};
@@ -301,12 +301,13 @@ var DataGrid,
 
 DataGrid = (function() {
 
-  function DataGrid(options) {
+  function DataGrid(id, options) {
     if (options == null) options = {};
     this.end_refresh_timer = __bind(this.end_refresh_timer, this);
     this.start_refresh_timer = __bind(this.start_refresh_timer, this);
     this.refresh = __bind(this.refresh, this);
     this.show = __bind(this.show, this);
+    this.error_no_data = __bind(this.error_no_data, this);
     this.header = __bind(this.header, this);
     this.limit = __bind(this.limit, this);
     this.filter = __bind(this.filter, this);
@@ -321,15 +322,15 @@ DataGrid = (function() {
     this.column_display_icon = __bind(this.column_display_icon, this);
     this.set_column_display = __bind(this.set_column_display, this);
     this.column_display = __bind(this.column_display, this);
+    this.id = id;
     this.filters = [];
     this.search = new picnet.ui.filter.SearchEngine();
     this.timer = null;
     this.column_displays = {};
-    this.options = this.set_options(options);
+    this.options = this.default_options(options);
   }
 
-  DataGrid.prototype.set_options = function(options) {
-    var _ref;
+  DataGrid.prototype.default_options = function(options) {
     if (options.filename == null) options.filename = null;
     if (options.page == null) options.page = 1;
     if (options.limit == null) options.limit = 100;
@@ -337,7 +338,8 @@ DataGrid = (function() {
     if (options.page_top == null) options.page_top = false;
     if (options.page_bottom == null) options.page_bottom = true;
     if (options.time_interval == null) options.time_interval = 800;
-    return (_ref = options.chart_display) != null ? _ref : options.chart_display = true;
+    if (options.chart_display == null) options.chart_display = true;
+    return options;
   };
 
   DataGrid.prototype.column_display = function(column_id) {
@@ -382,7 +384,7 @@ DataGrid = (function() {
     this.set_column_display(column_id, new_display);
     return this.display_controls.filter(function(d, i) {
       return i === column_id;
-    }).attr("src", this.column_display_icon(current_display));
+    }).text(current_display).classed(new_display, false).classed(current_display, true);
   };
 
   DataGrid.prototype.create_view = function(id, data, options) {
@@ -405,9 +407,9 @@ DataGrid = (function() {
       return d;
     });
     if (grid_views) {
-      this.display_controls = grid_views.selectAll("td").data(header_data).enter().append("td").attr("class", "data_grid_display_select").append("a").attr("href", "#").on("click", function(d, i) {
+      this.display_controls = grid_views.selectAll("td").data(header_data).enter().append("td").attr("class", "data_grid_data_display_cell").append("a").attr("href", "#").on("click", function(d, i) {
         return _this.change_column_display(i);
-      }).append("img").attr("src", this.column_display_icon("chart"));
+      }).text("chart").classed("data_grid_data_display chart", true).text("chart");
       this.display_controls.each(function(d, i) {
         return _this.set_column_display(i, "num");
       });
@@ -542,13 +544,21 @@ DataGrid = (function() {
     return d3.keys(data[0]);
   };
 
-  DataGrid.prototype.show = function(id, data) {
+  DataGrid.prototype.error_no_data = function() {
+    return d3.select("#" + this.id).html("<div class=\"data_grid_error\">ERROR: file cannot be loaded</div>");
+  };
+
+  DataGrid.prototype.show = function(data) {
     var options;
-    this.original_data = data;
-    d3.select("#" + id).html("<div id=\"data_grid_pagination_top\"></div><div id=\"data_grid_data\"></div><div id=\"data_grid_pagination_bottom\"></div>");
-    options = this.options;
-    this.create_view("#data_grid_data", data, options);
-    return this.refresh();
+    if (!data) {
+      return this.error_no_data();
+    } else {
+      this.original_data = data;
+      d3.select("#" + this.id).html("<div id=\"data_grid_pagination_top\"></div><div id=\"data_grid_data\"></div><div id=\"data_grid_pagination_bottom\"></div>");
+      options = this.options;
+      this.create_view("#data_grid_data", data, options);
+      return this.refresh();
+    }
   };
 
   DataGrid.prototype.refresh = function() {

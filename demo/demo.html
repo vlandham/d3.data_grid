@@ -12,41 +12,95 @@
 
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <link rel="stylesheet" href="demo/css/reset.css">
-  <link rel="stylesheet" href="demo/css/data_table.css">
-  <link rel="stylesheet" href="demo/css/style.css">
-  <link rel="stylesheet" href="demo/css/data_grid.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/data_grid.css">
 
-  <script src="demo/js/modernizr-2.0.6.min.js"></script>
+  <script src="js/d3.v2.js"></script>
+  <script src="../d3.data_grid.js"></script>
+  <style type="text/css">
+    a, a:visited, a:active {
+      color: #436DB3;
+    }
+
+    a:hover { color: #588EEA; }
+
+    #main {
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
   <div id="container">
-    <header>
-      <div class="container">
-      </div>
-    </header>
     <div id="main" role="main">
       <div class="content container">
         <div id="data_grid"></div>
       </div>
     </div>
-    <footer>
-    </footer>
   </div> <!--! end of #container -->
+  <script>
+
+    function getURLParameter(name) {
+      return decodeURIComponent((RegExp('[?|&]' + name + '=' + '(.+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+    }
+
+    function get_options() {
+      var options = {};
+      options.filename = getURLParameter('file') || null;
+      options.page = parseInt(getURLParameter('page')) || 1;
+      options.limit = parseInt(getURLParameter('limit')) || 100;
+      options.sort = getURLParameter('sort') || null;
+      options.page_top = getURLParameter('page_top') === 'true';
+      options.page_bottom = !(getURLParameter('page_bottom') === 'false');
+      options.timer_interval = getURLParameter('timer_interval') || 800;
+      options.chart_display = !(getURLParameter('chart_display') === 'false');
+      return options;
+    }
+
+    function error_no_file() {
+      d3.select("#data_grid").html("<h2 class=\"error\">ERROR: no file provided</h2>");
+    }
+
+    function error_bad_extension() {
+      d3.select("#data_grid").html("<h2 class=\"error\">ERROR: " + options.filename + " wrong extension. Can be .tsv or .csv</h2>");
+    }
 
 
-  <script src="demo/js/jquery-1.6.2.min.js"></script>
-  <script src="demo/js/d3.v2.js"></script>
-  <script src="demo/js/script.js"></script>
-  <script src="d3.data_grid.js"></script>
-  <script src="demo/load.js"></script>
+    var options = get_options();
+    options.filename = "data/movies_2011.csv";
 
-  <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
-       chromium.org/developers/how-tos/chrome-frame-getting-started -->
-  <!--[if lt IE 7 ]>
-    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-    <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
-  <![endif]-->
+    var data_grid = new data_grid.DataGrid("data_grid", options);
+
+    function data_loaded(data) {
+      data_grid.show(data);
+    }
+
+    if(options.filename)
+    {
+      ext = options.filename.split('.').pop();
+
+      if(ext == "csv")
+      {
+        d3.csv(options.filename, data_loaded);
+      }
+      else if(ext == "tsv")
+      {
+        d3.tsv(options.filename, data_loaded);
+      }
+      else
+      {
+        error_bad_extension();
+      }
+    }
+    else
+    {
+      error_no_file();
+    }
+
+
+  </script>
+
+  <!-- <script src="load.js"></script> -->
+
 </body>
 </html>
 

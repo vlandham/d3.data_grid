@@ -84,27 +84,6 @@ span.header_accent a {
   margin: auto;
 }
 
-img {
-  display:block;
-  margin: auto;
-}
-
-img.thumb {
-  width: 150px;
-}
-
-img.small {
-  width: 300px;
-}
-
-img.medium {
-  width: 600px;
-}
-
-img.large {
-  width: 900px;
-}
-
 table thead td, table thead th {
   text-align: center;
 }

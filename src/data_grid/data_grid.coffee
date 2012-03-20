@@ -1,13 +1,14 @@
 
 class DataGrid
-  constructor: (options = {}) ->
+  constructor: (id, options = {}) ->
+    @id = id
     @filters = []
     @search  = new picnet.ui.filter.SearchEngine()
     @timer = null
     @column_displays = {}
-    @options = this.set_options(options)
+    @options = this.default_options(options)
 
-  set_options: (options) ->
+  default_options: (options) ->
     options.filename ?= null
     options.page ?= 1
     options.limit ?= 100
@@ -16,6 +17,7 @@ class DataGrid
     options.page_bottom ?= true
     options.time_interval ?= 800
     options.chart_display ?= true
+    options
 
   # TODO: lots of column display stuff in our data_grid
   # move out to separate class?
@@ -48,7 +50,10 @@ class DataGrid
           new_html = "<div title=\"#{raw_value}\"class=\"data_grid_bar\" style=\"width:#{w(value)};background-color:steelBlue;height:16px;\"></div>"
       d3.select(this).selectAll("td").filter((d,i) -> i == column_id).html(new_html)
     this.set_column_display(column_id, new_display)
-    @display_controls.filter((d,i) -> i == column_id).attr("src", this.column_display_icon(current_display))
+    @display_controls.filter((d,i) -> i == column_id)
+      .text(current_display)
+      .classed(new_display, false)
+      .classed(current_display, true)
       
   create_view: (id, data, options) =>
     grid = d3.select(id).append("table")
@@ -73,11 +78,12 @@ class DataGrid
     if grid_views
       @display_controls = grid_views.selectAll("td")
         .data(header_data).enter()
-      .append("td").attr("class", "data_grid_display_select").append("a")
+      .append("td").attr("class", "data_grid_data_display_cell").append("a")
         .attr("href", "#")
         .on("click", (d,i) => this.change_column_display(i))
-        .append("img")
-        .attr("src", this.column_display_icon("chart"))
+        .text("chart")
+        .classed("data_grid_data_display chart", true)
+        .text("chart")
 
       @display_controls.each((d,i) => this.set_column_display(i, "num"))
 
@@ -203,18 +209,25 @@ class DataGrid
   header: (data) =>
     d3.keys(data[0])
 
+
+  error_no_data: () =>
+    d3.select("##{@id}").html("<div class=\"data_grid_error\">ERROR: file cannot be loaded</div>")
+
   # Sets up initial DataGrid view
   # id is the html id of the element to insert DataGrid into
   # Example: "data_grid"
   # data is the Array of Objects to display
-  show: (id,data) =>
-    @original_data = data
-    d3.select("##{id}").html("<div id=\"data_grid_pagination_top\"></div><div id=\"data_grid_data\"></div><div id=\"data_grid_pagination_bottom\"></div>")
+  show: (data) =>
+    if !data
+      this.error_no_data()
+    else
+      @original_data = data
+      d3.select("##{@id}").html("<div id=\"data_grid_pagination_top\"></div><div id=\"data_grid_data\"></div><div id=\"data_grid_pagination_bottom\"></div>")
 
-    options = @options
+      options = @options
 
-    this.create_view("#data_grid_data", data, options)
-    this.refresh()
+      this.create_view("#data_grid_data", data, options)
+      this.refresh()
 
   # Refreshes the display of the data given the current
   # options and filters set
